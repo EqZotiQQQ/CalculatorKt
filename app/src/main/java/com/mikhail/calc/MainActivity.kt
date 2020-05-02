@@ -116,13 +116,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculate(str: String):StringBuilder {
-        Log.d(TAG, "calculate expression: $str")
-        var bd = BigDecimal(0)
-        var values = str.split("[*\\-+/]".toRegex()).toMutableList()
-        var signs = StringBuilder(str.replace("\\d|\\.".toRegex(), ""))
+        var string = StringBuilder(str)
+        Log.d(TAG, "calculate expression 120: $string")
+        for((i, s) in string.withIndex()) {
+            if(s == '-') {
+                if (i > 0) {
+                    if (string[i-1].isDigit()) {
+                        string.insert(i,'+')
+                    }
+                }
+            }
+        }
+        var values = string.split("[+|*|/]".toRegex()).toMutableList()
+        var signs = StringBuilder(string.replace("\\d|\\.|-".toRegex(), ""))
+
         var multPos = signs.indexOf('*')
         var divPos = signs.indexOf('/')
         var sign = 0
+        var bd = BigDecimal(values[0])
         while (multPos != -1 || divPos != -1) {
             if (divPos != -1 && (divPos < multPos || multPos == -1)) {
                 sign = divPos
@@ -140,22 +151,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         var addPos = signs.indexOf('+')
-        var minusPos = signs.indexOf('-')
-        while (addPos != -1 || minusPos != -1) {
-            if(addPos != -1 && (addPos < minusPos || minusPos == -1)) {
-                sign = addPos
-                bd = values[sign].toBigDecimal().add(values[sign + 1].toBigDecimal(), precision)
-            } else if(minusPos != -1 && (minusPos < addPos || addPos == -1)) {
-                sign = minusPos
-                bd = values[sign].toBigDecimal().subtract(values[sign + 1].toBigDecimal(), precision)
-            } else { Log.d(TAG, "WTF?") }
+        while (addPos != -1) {
+            sign = addPos
+            bd = values[sign].toBigDecimal().add(values[sign + 1].toBigDecimal(), precision)
             values.removeAt(sign + 1)
             values.removeAt(sign)
             signs.deleteCharAt(sign)
             values.add(sign, bd.toString())
             addPos = signs.indexOf('+')
-            minusPos = signs.indexOf('-')
         }
+        Log.d(TAG, "bd = $bd")
         return StringBuilder(bd.toString())
     }
 
