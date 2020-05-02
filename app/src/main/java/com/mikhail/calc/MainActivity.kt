@@ -1,6 +1,5 @@
 package com.mikhail.calc
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,15 +20,15 @@ import java.math.MathContext
 class MainActivity : AppCompatActivity() {
     private val TAG: String = "Calculator"
     data class BracketPositions(val openPos: Int, val closePos: Int, val bc: Boolean)
-    var fullExpression: StringBuilder = StringBuilder()
-    var resultPreview: StringBuilder = StringBuilder()
-    var prescision: MathContext = MathContext(5)        /*Need to add key for this option. By default 5*/
+    private var fullExpression = StringBuilder()
+    private var resultPreview = StringBuilder()
+    private var precision: MathContext = MathContext(5)        /*Need to add key for this option. By default 5*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-    public fun onClick(v: View) {
+    fun onClick(v: View) {
         Log.d(TAG, "onClick(${v})")
         val value: String = when (v.id) {
             R.id.btn0 -> "0"
@@ -56,14 +55,10 @@ class MainActivity : AppCompatActivity() {
         when (v.id) {
             R.id.btnClear -> {
                 fullExpression.clear()
-                resultPreview.clear()
             }
             R.id.btnRemoveSymbol -> {
-                if(fullExpression.length > 1) {
+                if(fullExpression.isNotEmpty()) {
                     fullExpression.deleteCharAt(fullExpression.lastIndex)
-                } else {
-                    fullExpression.clear()
-                    resultPreview.clear()
                 }
             }
             R.id.btnEquals -> {
@@ -71,10 +66,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        updateCalcWindow()
         if(isCorrect()) {
             parseExpression()
+            Log.d(TAG, "Full expression after parsing: $fullExpression")
         }
-        updateCalcWindow()
     }
 
     private fun isCorrect(): Boolean {
@@ -82,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         if (i == "/" || i == "*" || i == "-" || i == "+" || !isBracketsCorrect()) {
             Log.d(TAG, "Expression $fullExpression isn't correct")
             return false
-        }   //not finished expression
+        }
         Log.d(TAG, "Expression $fullExpression is correct")
         resultPreview = fullExpression
         return true
@@ -98,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun parseExpression() {
         Log.d(TAG, "parseExpression()")
-        while (resultPreview.contains("\\*|\\-|\\+|\\/".toRegex())) {
+        while (resultPreview.contains("[*\\-+/]".toRegex())) {
 
             var bracketPair: BracketPositions = getDeepestBrackets()
             if(!bracketPair.bc) {
@@ -111,7 +107,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val o = bracketPair.openPos + 1
                 val c = bracketPair.closePos
+                Log.d(TAG, "full expression = $fullExpression")
                 resultPreview.replace(o-1, c+1, calculate(resultPreview.substring(o, c)).toString())
+                Log.d(TAG, "full expression = $fullExpression")
             }
         }
         updatePreview(resultPreview.toString())
@@ -120,76 +118,44 @@ class MainActivity : AppCompatActivity() {
     private fun calculate(str: String):StringBuilder {
         Log.d(TAG, "calculate expression: $str")
         var bd = BigDecimal(0)
-        var valuesList: MutableList<String> = str.split("\\*|\\-|\\+|\\/".toRegex()).toMutableList()
-        var signsList = StringBuilder(str.replace("\\d|\\.".toRegex(), ""))
-        var signMult = signsList.indexOf('*')
-        var signDiv = signsList.indexOf('/')
-        while (signMult != -1 || signDiv != -1) {
-            if (signMult != -1 && signDiv != -1) {
-                if (signMult < signDiv) {
-                    bd = valuesList[signMult].toBigDecimal().multiply(valuesList[signMult + 1].toBigDecimal(), prescision)
-                    valuesList.removeAt(signMult + 1)
-                    valuesList.removeAt(signMult)
-                    signsList.deleteCharAt(signMult)
-                    valuesList.add(signMult, bd.toString())
-                } else {
-                    bd = valuesList[signDiv].toBigDecimal().divide(valuesList[signDiv + 1].toBigDecimal(), prescision)
-                    valuesList.removeAt(signDiv + 1)
-                    valuesList.removeAt(signDiv)
-                    signsList.deleteCharAt(signDiv)
-                    valuesList.add(signDiv, bd.toString())
-                }
-            } else if (signDiv != -1) {
-                bd = valuesList[signDiv].toBigDecimal().divide(valuesList[signDiv + 1].toBigDecimal(), prescision)
-                valuesList.removeAt(signDiv + 1)
-                valuesList.removeAt(signDiv)
-                signsList.deleteCharAt(signDiv)
-                valuesList.add(signDiv, bd.toString())
-            } else if (signMult != -1) {
-                bd = valuesList[signMult].toBigDecimal().multiply(valuesList[signMult + 1].toBigDecimal(), prescision)
-                valuesList.removeAt(signMult + 1)
-                valuesList.removeAt(signMult)
-                signsList.deleteCharAt(signMult)
-                valuesList.add(signMult, bd.toString())
-            }
-            signMult = signsList.indexOf('*')
-            signDiv = signsList.indexOf('/')
+        var values = str.split("[*\\-+/]".toRegex()).toMutableList()
+        var signs = StringBuilder(str.replace("\\d|\\.".toRegex(), ""))
+        var multPos = signs.indexOf('*')
+        var divPos = signs.indexOf('/')
+        var sign = 0
+        while (multPos != -1 || divPos != -1) {
+            if (divPos != -1 && (divPos < multPos || multPos == -1)) {
+                sign = divPos
+                bd = values[divPos].toBigDecimal().divide(values[sign + 1].toBigDecimal(), precision)
+            } else if (multPos != -1 && (multPos < divPos || divPos == -1)) {
+                sign = multPos
+                bd = values[multPos].toBigDecimal().multiply(values[sign + 1].toBigDecimal(), precision)
+            } else { Log.d(TAG, "WTF?") }
+            values.removeAt(sign + 1)
+            values.removeAt(sign)
+            signs.deleteCharAt(sign)
+            values.add(sign, bd.toString())
+            multPos = signs.indexOf('*')
+            divPos = signs.indexOf('/')
         }
 
-        var signPlus = signsList.indexOf('+')
-        var signMinus = signsList.indexOf('-')
-        while (signPlus != -1 || signMinus != -1) {
-            if (signPlus != -1 && signMinus != -1) {
-                if (signPlus > signMinus) {
-                    bd = valuesList[signMinus].toBigDecimal().subtract(valuesList[signMinus + 1].toBigDecimal(), prescision)
-                    valuesList.removeAt(signMinus + 1)
-                    valuesList.removeAt(signMinus)
-                    signsList.deleteCharAt(signMinus)
-                    valuesList.add(signMinus, bd.toString())
-                } else {
-                    bd = valuesList[signPlus].toBigDecimal().add(valuesList[signPlus + 1].toBigDecimal(), prescision)
-                    valuesList.removeAt(signPlus + 1)
-                    valuesList.removeAt(signPlus)
-                    signsList.deleteCharAt(signPlus)
-                    valuesList.add(signPlus, bd.toString())
-                }
-            } else if(signPlus != -1) {
-                bd = valuesList[signPlus].toBigDecimal().add(valuesList[signPlus + 1].toBigDecimal(), prescision)
-                valuesList.removeAt(signPlus + 1)
-                valuesList.removeAt(signPlus)
-                signsList.deleteCharAt(signPlus)
-                valuesList.add(signPlus, bd.toString())
-            } else if(signMinus != -1) {
-                bd = valuesList[signMinus].toBigDecimal().subtract(valuesList[signMinus + 1].toBigDecimal(), prescision)
-                valuesList.removeAt(signMinus + 1)
-                valuesList.removeAt(signMinus)
-                signsList.deleteCharAt(signMinus)
-                valuesList.add(signMinus, bd.toString())
-            }
-            signPlus = signsList.indexOf('+')
-            signMinus = signsList.indexOf('-')
+        var addPos = signs.indexOf('+')
+        var minusPos = signs.indexOf('-')
+        while (addPos != -1 || minusPos != -1) {
+            if(addPos != -1 && (addPos < minusPos || minusPos == -1)) {
+                sign = addPos
+                bd = values[sign].toBigDecimal().add(values[sign + 1].toBigDecimal(), precision)
+            } else if(minusPos != -1 && (minusPos < addPos || addPos == -1)) {
+                sign = minusPos
+                bd = values[sign].toBigDecimal().subtract(values[sign + 1].toBigDecimal(), precision)
+            } else { Log.d(TAG, "WTF?") }
+            values.removeAt(sign + 1)
+            values.removeAt(sign)
+            signs.deleteCharAt(sign)
+            values.add(sign, bd.toString())
+            addPos = signs.indexOf('+')
+            minusPos = signs.indexOf('-')
         }
-
         return StringBuilder(bd.toString())
     }
 
