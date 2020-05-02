@@ -4,18 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
 import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.math.MathContext
 
+/**
+ * TODO:
+ * replace EditText with something else what
+ *
+ * */
 
-/*
-* TODO:
-* 1. add fractals
-* 2. R doesn't work correctly
-* 3. Add -x
-* */
 
 class MainActivity : AppCompatActivity() {
     private val TAG: String = "Calculator"
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btnSubtract -> "-"
             R.id.btnOpenBrace -> "("
             R.id.btnCloseBrace -> ")"
+            R.id.btnPersent -> "%"
             else -> ""
         }
         fullExpression.append(value)
@@ -68,13 +70,18 @@ class MainActivity : AppCompatActivity() {
 
         updateCalcWindow()
         if(isCorrect()) {
-            parseExpression()
-            Log.d(TAG, "Full expression after parsing: $fullExpression")
+            try {
+                parseExpression()
+                Log.d(TAG, "Full expression after parsing: $fullExpression")
+            } catch (exc: Exception) {
+                Log.d(TAG, "incorrect expression")
+                resultPreview = StringBuilder("incorrect expression")
+            }
         }
     }
 
     private fun isCorrect(): Boolean {
-        var i = fullExpression.takeLast(1).toString()
+        val i = fullExpression.takeLast(1).toString()
         if (i == "/" || i == "*" || i == "-" || i == "+" || !isBracketsCorrect()) {
             Log.d(TAG, "Expression $fullExpression isn't correct")
             return false
@@ -93,31 +100,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun parseExpression() {
-        Log.d(TAG, "parseExpression()")
+        Log.d(TAG, "parseExpression($resultPreview)")
         while (resultPreview.contains("[*\\-+/]".toRegex())) {
-
-            var bracketPair: BracketPositions = getDeepestBrackets()
+            val bracketPair: BracketPositions = getDeepestBrackets()
             if(!bracketPair.bc) {
                 Log.d(TAG, "Number of '(' != ')'")
                 return
             }
             if (bracketPair.closePos == 0) {
                 resultPreview = calculate(resultPreview.toString())
-                break;
+                break
             } else {
                 val o = bracketPair.openPos + 1
                 val c = bracketPair.closePos
-                Log.d(TAG, "full expression = $fullExpression")
                 resultPreview.replace(o-1, c+1, calculate(resultPreview.substring(o, c)).toString())
-                Log.d(TAG, "full expression = $fullExpression")
             }
         }
         updatePreview(resultPreview.toString())
     }
 
     private fun calculate(str: String):StringBuilder {
-        var string = StringBuilder(str)
-        Log.d(TAG, "calculate expression 120: $string")
+        val string = StringBuilder(str)
+        Log.d(TAG, "calculate expression: $string")
         for((i, s) in string.withIndex()) {
             if(s == '-') {
                 if (i > 0) {
@@ -127,13 +131,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        var values = string.split("[+|*|/]".toRegex()).toMutableList()
-        var signs = StringBuilder(string.replace("\\d|\\.|-".toRegex(), ""))
-
+        Log.d(TAG, "calculate expression: $string")
+        val values = string.split("[+|*/]".toRegex()).toMutableList()
+        val signs = StringBuilder(string.replace("\\d|\\.|-|%".toRegex(), ""))
         var multPos = signs.indexOf('*')
         var divPos = signs.indexOf('/')
         var sign = 0
         var bd = BigDecimal(values[0])
+        Log.d(TAG, "Point")
+        for((i, s) in values.withIndex()) {
+            if(s.last() == '%') {
+                var sb = StringBuilder(values[i])
+                values[i] = sb.deleteCharAt(sb.lastIndex).toString()
+                var multiplier = values[i-1].toBigDecimal().divide(BigDecimal(100))
+                values[i] = values[i].toBigDecimal().multiply(multiplier).toString()
+            }
+        }
+
+        Log.d(TAG, "values: ${values.toString()}")
+        Log.d(TAG, "Signs: $signs")
         while (multPos != -1 || divPos != -1) {
             if (divPos != -1 && (divPos < multPos || multPos == -1)) {
                 sign = divPos

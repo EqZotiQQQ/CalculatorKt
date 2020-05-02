@@ -32,6 +32,7 @@
             android:columnCount="5"
             android:rowCount="5">
             <Button android:text="hist"
+                android:background="#FFDEAD"
                 android:layout_width="80sp"
                 android:onClick="onClick"
                 android:clickable="false"
@@ -69,6 +70,7 @@
                 android:layout_width="80sp"
                 android:id="@+id/btnDivide"> </Button>
             <Button android:id="@+id/btnAdditionalAction1"
+                android:background="#FFDEAD"
                 android:clickable="false"
                 android:onClick="onClick"
                 android:layout_width="80sp"
@@ -90,6 +92,7 @@
                 android:layout_width="80sp"
                 android:id="@+id/btnMultiply"> </Button>
             <Button android:id="@+id/btnAdditionalAction2"
+                android:background="#FFDEAD"
                 android:clickable="false"
                 android:onClick="onClick"
                 android:layout_width="80sp"
@@ -111,6 +114,7 @@
                 android:layout_width="80sp"
                 android:id="@+id/btnSubtract"> </Button>
             <Button android:id="@+id/btnAnotherActions"
+                android:background="#FFDEAD"
                 android:clickable="false"
                 android:onClick="onClick"
                 android:layout_width="80sp"
@@ -132,11 +136,13 @@
                 android:onClick="onClick"
                 android:layout_width="80sp"
                 android:id="@+id/btnPlus"> </Button>
+
             <Button
-                android:clickable="false"
                 android:id="@+id/btnEquals"
-                android:onClick="onClick"
                 android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:onClick="onClick"
                 android:text="="> </Button>
         </GridLayout>
     </LinearLayout>
