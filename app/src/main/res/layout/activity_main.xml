@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#464451"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -11,140 +12,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
+        <TextView
             android:id="@+id/etCalculationWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="enter calculation"
-            android:inputType="number"
-            android:textSize="50sp"></EditText>
+            android:gravity="center"
+            android:hint="@string/expression"
+            android:maxLines="1"
+            android:textSize="50sp"> </TextView>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Result"
+            android:hint="@string/result"
+            android:gravity="center"
+            android:maxLines="1"
             android:textSize="50sp"
             android:id="@+id/tvResultPreview"> </TextView>
-
-        <GridLayout
+        <LinearLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:columnCount="5"
-            android:rowCount="5">
-            <Button android:text="hist"
-                android:background="#FFDEAD"
-                android:layout_width="80sp"
-                android:onClick="onClick"
-                android:clickable="false"
-                android:id="@+id/btnHistBrace"> </Button>
-            <Button android:text="("
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnOpenBrace"> </Button>
-            <Button android:text=")"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnCloseBrace"> </Button>
-            <Button android:text="C"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnClear"> </Button>
-            <Button android:id="@+id/btnRemoveSymbol"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:text="R"> </Button>
-            <Button android:text="1"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn1"> </Button>
-            <Button android:text="2"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn2"> </Button>
-            <Button android:text="3"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn3"> </Button>
-            <Button android:text="/"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnDivide"> </Button>
-            <Button android:id="@+id/btnAdditionalAction1"
-                android:background="#FFDEAD"
-                android:clickable="false"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:text="\?"> </Button>
-            <Button android:text="4"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn4"> </Button>
-            <Button android:text="5"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn5"> </Button>
-            <Button android:text="6"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn6"> </Button>
-            <Button android:text="*"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnMultiply"> </Button>
-            <Button android:id="@+id/btnAdditionalAction2"
-                android:background="#FFDEAD"
-                android:clickable="false"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:text="\?"> </Button>
-            <Button android:text="7"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn7"> </Button>
-            <Button android:text="8"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn8"> </Button>
-            <Button android:text="9"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn9"> </Button>
-            <Button android:text="-"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnSubtract"> </Button>
-            <Button android:id="@+id/btnAnotherActions"
-                android:background="#FFDEAD"
-                android:clickable="false"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:text="..."> </Button>
-            <Button android:text="0"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btn0"> </Button>
-            <Button android:text="."
-                android:layout_width="80sp"
-                android:onClick="onClick"
-                android:id="@+id/btnDot"> </Button>
-            <Button android:text="%"
-                android:clickable="false"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnPersent"> </Button>
-            <Button android:text="+"
-                android:onClick="onClick"
-                android:layout_width="80sp"
-                android:id="@+id/btnPlus"> </Button>
-
-            <Button
-                android:id="@+id/btnEquals"
-                android:layout_width="80sp"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:onClick="onClick"
-                android:text="="> </Button>
-        </GridLayout>
+            android:orientation="vertical">
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

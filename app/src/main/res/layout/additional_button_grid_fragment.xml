@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AdditionalButtonGrid">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnHistBrace"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="Hist"> </Button>
+
+            <Button
+                android:id="@+id/btnToDegree"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="deg"> </Button>
+
+            <Button
+                android:id="@+id/btnToRad"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="rad"> </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnSqrt"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="√"> </Button>
+
+            <Button
+                android:id="@+id/btnPow"
+                android:layout_width="80sp"
+                android:layout_height="match_parent"
+                android:onClick="onClick"
+                android:text="pow"> </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnPi"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="π"> </Button>
+            <Button
+                android:id="@+id/btnE"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="e"> </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnAbs"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="abs"> </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnChangeAdditionalToMainFragment"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:background="#FFDEAD"
+                android:onClick="onClick"
+                android:text="..."> </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnSin"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="sin"> </Button>
+
+            <Button
+                android:id="@+id/btnCos"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="Cos"> </Button>
+
+            <Button
+                android:id="@+id/btnTg"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:onClick="onClick"
+                android:text="Tg"> </Button>
+
+            <Button
+                android:id="@+id/btnCtg"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="Ctg"> </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</FrameLayout>

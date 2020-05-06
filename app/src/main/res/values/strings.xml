@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Calc</string>
+    <string name="expression">Expression</string>
+    <string name="result">Result</string>
+    <string name="hist">hist</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
