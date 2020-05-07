@@ -1,0 +1,17 @@
+TODO list:
+
+change fragments with swipe (prob need to set in options)
+separate functionality from main activity to fragments
+create additional layer of logic which will calculate the expression
+output in another fragment
+model:
+
+        input  (fragm)
+          |
+      calculate  (service maybe? or just in output layer, dunno)
+          |
+       output (fragm)
+
+
+fill other keys
+fix bugs
